@@ -196,7 +196,7 @@ button:active{
     background-color: rgb(227, 238, 241,0.7);
     box-shadow: 2px 10px 10px rgba(28, 99, 124, 0.1);
     border-radius: 20px;
-    height: 220px;
+    height: 250px;
     width: 300px;
 }
 @media (max-width: 1000px) {
