@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title> Smart Flood Gate</title>
+    <script  type="module"  src="main.js"></script>
+</head>
+<body>
+
+    <section>
+        <div id="bar">
+            <label for="title" style="
+                font-weight: 500; 
+                color: #066081;
+                margin-left: 20px;
+                ">
+                Smart Flood Gate</label>
+                <label for="final" style="margin-left: 72%; font-size: 13px;opacity: 0.6;">Embedded Lab Final Project</label>
+        </div>
+        <div id="setting-page">
+            <img src="images/setting.png" alt="setting" id="setting">
+                <form class="feature" >
+                    <label for="Limit">Water Limit:</label>
+                    <input type="number" name="Limit" min="0" max="100" step="1" style="margin-left: 12px;" placeholder="Enter percentage">
+                </form>
+                <button id="apply-button" style="margin-left: 210px;">Apply</button>
+        </div>
+        <div class="waterContainer">  
+            <label id="current-flow">100</label> 
+            <div id="water-limit"></div> 
+            <div class="ruler">
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-1">100</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-2">90</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-3">80</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-4">70</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-5">60</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-6">50</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-7">40</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-8">30</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-9">20</p>
+                </div>
+                <div class="rulerLine">
+                    <div class="line"></div>
+                    <p id="line-10">10</p>
+                </div>
+            </div>
+            
+        </div> 
+            <!--<label for="water-status" id="water-status">Normal</label>-->
+            <div id="control-panel">
+                <form class="feature">
+                    <label for="percentage" style="font-weight: 500;">Percentage Used:</label>
+                    <label id="percentage-used-info" class="information">80%</label>
+                </form>
+                <form class="feature">
+                    <label for="threshold" style="font-weight: 500;">Safety Threshold:</label>
+                    <label id="safety-threshold-info" class="information">95%</label>
+                </form>
+                <form class="feature">
+                    <label for="dam-status" style="font-weight: 500;">Flood Gate Status:</label>
+                    <label id="dam-gate-status-info" class="information">Open</label>
+                </form>
+                <form class="feature">
+                    <label for="control-mechanism" style="font-weight: 500;">Control Mechanism:</label>
+                    <label id="control-mechanism-info" class="information">Automated</label>
+                </form>
+            </div>            
+    </section>
+</body>
+</html>
