@@ -29,6 +29,14 @@
                     <label for="Limit">Water Limit:</label>
                     <input type="number" name="Limit" min="0" max="100" step="1" style="margin-left: 12px;" placeholder="Enter percentage">
                 </form>
+                <form class="feature" >
+                    <label for="Username">Username:</label>
+                    <input type="text" name="Username"style="margin-left: 18px;" placeholder="Enter Username">
+                </form>
+                <form class="feature" >
+                    <label for="Password">Password:</label>
+                    <input type="password" name="Password"  style="margin-left: 22px;" placeholder="Enter Password">
+                </form>
                 <button id="apply-button" style="margin-left: 210px;">Apply</button>
         </div>
         <div class="waterContainer">  
@@ -87,6 +95,10 @@
                 <form class="feature">
                     <label for="threshold" style="font-weight: 500;">Safety Threshold:</label>
                     <label id="safety-threshold-info" class="information">95%</label>
+                </form>
+                <form class="feature">
+                    <label for="dam-status" style="font-weight: 500;">Current Threshold:</label>
+                    <label id="current-threshold" class="information">10%</label>
                 </form>
                 <form class="feature">
                     <label for="dam-status" style="font-weight: 500;">Flood Gate Status:</label>

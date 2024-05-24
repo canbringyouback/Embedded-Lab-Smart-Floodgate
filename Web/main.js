@@ -1,6 +1,9 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
-import { getDatabase, ref, onValue,set  } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
+import { getDatabase, ref, onValue,set,get } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-auth.js";
+
+
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,6 +27,8 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
+
+
 var db = getDatabase();
 const starCountRef = ref(db, 'sensors/data/waterLevel');
 const stage = ref(db, 'sensors/data/motorAngle');
@@ -80,8 +85,8 @@ function updateControlPanel(currentWaterLevel, remainingCapacity, percentageUsed
 function handleApplyButtonClick() {
 
 var waterLimit = document.querySelector('input[name="Limit"]').value;
-
-
+const username = document.querySelector('input[name="Username"]').value;
+const password = document.querySelector('input[name="Password"]').value;
 waterLimit = parseFloat(waterLimit);
 
 if (waterLimit==='') {
@@ -103,15 +108,26 @@ if (waterLimit==='') {
     //document.getElementById('Manual').disabled = true;
     //document.getElementById('apply-button').disabled = true; 
   
-    set(ref(db, 'Web/data'), {
-        waterLevel: waterLimit
-      });
-    
-    updateRulerLines();
-    updateControlPanel(0,fullCapacity,100,waterLimit,"Closed",manualAuto,unitMeasurement);
-    updateWaterLimitPosition(fullCapacity,waterLimit);
+  
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, username, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          document.getElementById('current-threshold').innerHTML = waterLimit + "%";
+          {set(ref(db, 'Web/data'), {
+            waterLevel: waterLimit
+          });}
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+    //updateRulerLines();
+   // updateControlPanel(0,fullCapacity,100,waterLimit,"Closed",manualAuto,unitMeasurement);
+   // updateWaterLimitPosition(fullCapacity,waterLimit);
 
-    toggleSpinAnimation();
+   // toggleSpinAnimation();
 }
 }
 
