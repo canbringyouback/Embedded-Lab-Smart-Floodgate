@@ -1,14 +1,14 @@
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
-import { getDatabase, ref, onValue,set,get } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+import { getDatabase, ref, onValue,set,get } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js"
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-var fullCapacity=200;
+
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
@@ -27,29 +27,28 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
-
-
 var db = getDatabase();
+
 const starCountRef = ref(db, 'sensors/data/waterLevel');
-const stage = ref(db, 'sensors/data/motorAngle');
+const stage = ref(db, 'sensors/data/state');
 onValue(stage, (snapshot) => {
     const a = snapshot.val();
     if(a=="0"){
     document.getElementById('dam-gate-status-info').innerHTML = "Idle";
-    document.getElementById('dam-gate-status-info').style.color=black;
+    document.getElementById('dam-gate-status-info').style.color="black";
     document.getElementById('dam-gate-status-info').style.fontWeight="normal";}
     else if(a=="1"){
         document.getElementById('dam-gate-status-info').innerHTML = "Working";
-        document.getElementById('dam-gate-status-info').style.color=black;
+        document.getElementById('dam-gate-status-info').style.color="black";
         document.getElementById('dam-gate-status-info').style.fontWeight="normal";}
         
     
     else if(a=="2"){
       
-            document.getElementById('dam-gate-status-info').innerHTML = "Overflow!";}
+            document.getElementById('dam-gate-status-info').innerHTML = "Overflow!";
             document.getElementById('dam-gate-status-info').style.color="red";
             document.getElementById('dam-gate-status-info').style.fontWeight="bold";
-    
+    }
   });
 onValue(starCountRef, (snapshot) => {
   const data = snapshot.val();
@@ -107,7 +106,16 @@ if (waterLimit==='') {
     //document.querySelector('input[name="Limit"]').disabled = true;
     //document.getElementById('Manual').disabled = true;
     //document.getElementById('apply-button').disabled = true; 
-  
+    var some="";
+    if(waterLimit<100){
+   some="0"+waterLimit;
+   
+    }
+    else if(waterLimit<10){
+      some="00"+waterLimit;
+    }
+   
+    
   
       const auth = getAuth();
       signInWithEmailAndPassword(auth, username, password)
@@ -116,7 +124,7 @@ if (waterLimit==='') {
           const user = userCredential.user;
           document.getElementById('current-threshold').innerHTML = waterLimit + "%";
           {set(ref(db, 'Web/data'), {
-            waterLevel: waterLimit
+            waterLevel: some
           });}
         })
         .catch((error) => {

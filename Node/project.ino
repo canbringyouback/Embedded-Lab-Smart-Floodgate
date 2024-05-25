@@ -67,10 +67,8 @@ void loop() {
     timeClient.update();
     unsigned long now = timeClient.getEpochTime();
     if(WiFi.status() == WL_CONNECTED && Firebase.ready()){
-  String waterLevel = Data[0]; // Simulate waterLevel reading
-  String motorAngle = Data[1]; // Simulate motorAngle value
-  // String waterLevel = "30"; // Simulate waterLevel reading
-  // String motorAngle = "90"; // Simulate motorAngle value
+  String waterLevel = Data[0]; // waterLevel reading
+  String state = Data[1]; // state readind
   String path = "/sensors/data";
   if (Firebase.setString(firebaseData, path + "/waterLevel", waterLevel)) {
     Serial.println("Water level updated: " + String(waterLevel));
@@ -78,14 +76,14 @@ void loop() {
     Serial.println("Failed to update water level: " + firebaseData.errorReason());
   }
 
-  if (Firebase.setString(firebaseData, path + "/motorAngle", motorAngle)) {
-    Serial.println("State: " + String(motorAngle));
+  if (Firebase.setString(firebaseData, path + "/state", state)) {
+    Serial.println("State: " + String(state));
   } else {
-    Serial.println("Failed to update motor angle: " + firebaseData.errorReason());
+    Serial.println("Failed to update state: " + firebaseData.errorReason());
   }
 
-  // delay(3000); // Wait a minute before sending the next update
-  if (Firebase.getString(firebaseData, "/Web/data/waterLevel")) {
+  
+  if (Firebase.getString(firebaseData, "/Web/data/waterLimit")) {
     String waterLimit = firebaseData.stringData();
     Serial.print("Water Limit: ");
     Serial.println(waterLimit);
@@ -93,47 +91,12 @@ void loop() {
     // Send waterLevel to STM32
     DataSerial.print(waterLimit);
   } else {
-    Serial.println("Failed to get water level: " + firebaseData.errorReason());
+    Serial.println("Failed to get water limit: " + firebaseData.errorReason());
   }
 }
     
   }
-  // if(DataSerial.available() > 0){
-    // Data[0]="";
-    // Data[1]="";
-    // uint8_t state=0;
-  //   while(DataSerial.available()){
-  //     char c = DataSerial.read();
-  //     if(c=='|') state++;
-  //     else Data[state]+=c;
-  //   }
-  //   Serial.println(Data[0]);
-  //   Serial.println(Data[1]);
-  // }
-  // int waterLevel = Data[0].toInt(); // Simulate waterLevel reading
-  // int motorAngle = Data[1].toInt(); // Simulate motorAngle value
-  // String waterLevel = "30"; // Simulate waterLevel reading
-  // String motorAngle = "90"; // Simulate motorAngle value
 
-  // if(WiFi.status() == WL_CONNECTED && Firebase.ready()){
-  // String waterLevel = Data[0]; // Simulate waterLevel reading
-  // String motorAngle = Data[1]; // Simulate motorAngle value
-
-  // String path = "/sensors/data";
-  // if (Firebase.setString(firebaseData, path + "/waterLevel", waterLevel)) {
-  //   Serial.println("Water level updated: " + String(waterLevel));
-  // } else {
-  //   Serial.println("Failed to update water level: " + firebaseData.errorReason());
-  // }
-
-  // if (Firebase.setString(firebaseData, path + "/motorAngle", motorAngle)) {
-  //   Serial.println("Motor angle updated: " + String(motorAngle));
-  // } else {
-  //   Serial.println("Failed to update motor angle: " + firebaseData.errorReason());
-  // }
-
-  // // delay(3000); // Wait a minute before sending the next update
-  // }
 }
 
 void Update_Data(){
@@ -149,10 +112,6 @@ void Update_Data(){
         }
       else Data[state]+=c;
     }
-    //Uncomment those lines below to check the value of data after update
-
-    // Serial.println(Data[0]);
-    // Serial.println(Data[1]);
+   
   }
-}
 

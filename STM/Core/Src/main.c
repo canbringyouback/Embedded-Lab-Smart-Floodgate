@@ -57,6 +57,7 @@ char buf[256]="";
 char buf2[3]="";
 int waterLimit=30;
 int state=0;
+int currentWater=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -139,27 +140,26 @@ int main(void)
   {
 
   // HAL_UART_Transmit(&huart2,msg ,strlen(msg),1000);
-if(msg2[0]>95){//overflow
+if(currentWater>95){//overflow
 	state=2;
-	 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+
 	 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
 }
-else if(msg2[0]<95&&state==2){//stop overflow
-	 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+else if(currentWater<95&&state==2){//stop overflow
+
 	 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	 state=0;
 }
- if(waterLimit<msg2[0]&&state==0){ //water>limit
-	 //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+ if(waterLimit<currentWater&&state==0){ //water>limit
+
 	 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 	 state=1;
  }
- else if(waterLimit>msg2[0]&&state==1 ){
+ else if(waterLimit>currentWater&&state==1 ){//idle;
 	 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	 state=0;
  }
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -278,7 +278,6 @@ static void MX_TIM2_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
@@ -298,28 +297,15 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
-  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -498,23 +484,18 @@ int a;
 
 	   HAL_ADC_Start(&hadc1);
 	   HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	   if(HAL_ADC_GetValue(&hadc1)<1100){
+	   if(HAL_ADC_GetValue(&hadc1)<1200){
 		   msg2[0]=0;
 	   }
 	   else{
-		   a=HAL_ADC_GetValue(&hadc1);
-
-		   a=((HAL_ADC_GetValue(&hadc1)-1100)*100)/1100;
+		   a=((HAL_ADC_GetValue(&hadc1)-1200)*100)/850;
 		   msg2[0]=a;
 	   }
-msg2[1]=state;
+	   currentWater=msg2[0];
+           msg2[1]=state;
 		  char data[50];
 				      sprintf(data,"%d|%d|", msg2[0],msg2[1]);
 				      HAL_UART_Transmit(&huart1, data, strlen(data), HAL_MAX_DELAY);
-				      sprintf(data,"%d|%d|%d\n\r", a,waterLimit,state);
-				      HAL_UART_Transmit(&huart2, data, strlen(data), HAL_MAX_DELAY);
-
-
 
   }
 }
@@ -524,7 +505,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
+{  if (huart == &huart1){
 char msg3[100];
     //HAL_GPIO_TogglePin (GPIOA, GPIO_PIN_5);
 	  waterLimit=atoi(buf2);
@@ -533,7 +514,7 @@ char msg3[100];
 	  //HAL_UART_Transmit_IT(&huart2, buf2,3);
 	  HAL_UART_Receive_IT(&huart1, buf2, 3);
 
-
+}
 }
 /* USER CODE END 4 */
 
